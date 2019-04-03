@@ -7,17 +7,84 @@
   <script src="jscript.js"></script>
   </head>
   <body>
-  	<h1> Tech Exercise 3 MDDN 352</h1> 
 
+  	<h1> Tech Exercise_3 </h1>
+  	<br>
+  	<p>tap the button to get your coordinates.</p>
 
-Your current loaction co-ordinates
 <button onclick="getLocation()">My Location</button>
-<p id="demo"> </p>
-<br>
-<br>
 
-Your current orientation:
+<p id="demo"></p>
 
+
+ <canvas id="myCanvas" width="360" height="450" style="border:1px solid #d3d3d3;">
+</canvas>
+
+<script>
+var x = document.getElementById("demo");
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition, showError);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
+}
+
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      x.innerHTML = "User denied the request for Geolocation."
+      break;
+    case error.POSITION_UNAVAILABLE:
+      x.innerHTML = "Location information is unavailable."
+      break;
+    case error.TIMEOUT:
+      x.innerHTML = "The request to get user location timed out."
+      break;
+    case error.UNKNOWN_ERROR:
+      x.innerHTML = "An unknown error occurred."
+      break;
+  }
+}
+
+      function deviceOrientationListener(event) {
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.fillStyle = "#FF7777";
+        ctx.font = "14px Verdana";
+        ctx.fillText("Alpha: " + Math.Round(event.alpha), 10, 20);
+        ctx.beginPath();
+        ctx.moveTo(180, 75);
+        ctx.lineTo(210, 75);
+        ctx.arc(180, 75, 60, 0, event.alpha * Math.PI / 180);
+        ctx.fill();
+
+        ctx.fillStyle = "#FF6600";
+        ctx.fillText("Beta: " + Math.round(event.beta), 10, 140);
+        ctx.beginPath();
+        ctx.fillRect(180, 150, event.beta, 90);
+
+        ctx.fillStyle = "#FF0000";
+        ctx.fillText("Gamma: " + Math.round(event.gamma), 10, 270);
+        ctx.beginPath();
+        ctx.fillRect(90, 340, 180, event.gamma);
+      }
+
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", deviceOrientationListener);
+      } else {
+        alert("Sorry, your browser doesn't support Device Orientation");
+      }
+
+</script>
 
 
   
